@@ -13,6 +13,13 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(cred, {
         'databaseURL': 'https://evrima-tender-tracking-default-rtdb.firebaseio.com/'
     })
+    
+async def connect():
+    opts = RobotClient.Options.with_api_key(
+        api_key='g7wj2rvi8jzujdacjw4kifr4nh2e3qs1',
+        api_key_id='42e9d6a7-549d-4d88-8897-6b088eaeadc5'
+    )
+    return await RobotClient.at_address('njordlinkplus.u1ho16k8rd.viam.cloud', opts)
 
 
 def get_previous_value(ref, field):

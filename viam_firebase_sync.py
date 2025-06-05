@@ -15,12 +15,11 @@ if not firebase_admin._apps:
     })
 
 
-async def connect():
-    opts = RobotClient.Options.with_api_key(
-        api_key='g7wj2rvi8jzujdacjw4kifr4nh2e3qs1',
-        api_key_id='42e9d6a7-549d-4d88-8897-6b088eaeadc5'
-    )
-    return await RobotClient.at_address('njordlinkplus.u1ho16k8rd.viam.cloud', opts)
+def get_previous_value(ref, field):
+    current = ref.get()
+    if current and field in current:
+        return current[field]
+    return 0  # or another sensible default
 
 async def main(machine):
     print("Querying VIAM sensor...")
@@ -44,32 +43,41 @@ async def main(machine):
     timestamp = int(time.time() * 1000)
 
     if ships:
+        ref = db.reference("positions/ship/latest")
+        prev_heading = get_previous_value(ref, "heading")
+        prev_speed = get_previous_value(ref, "speed")
         db.reference("positions/ship/latest").set({
             "timestamp": timestamp,
             "lat": ships[0]["Latitude"],
             "lon": ships[0]["Longitude"],
-            "heading": ships[0].get("COG"),
-            "speed": ships[0].get("SOG"),
+            "heading": ships[0].get("COG") if ships[0].get("COG") is not None else prev_heading,
+            "speed": ships[0].get("SOG") if ships[0].get("SOG") is not None else prev_speed,
         })
         print("✅ Ship position updated")
 
     if tenders3:
+        ref = db.reference("positions/tender3/latest")
+        prev_heading = get_previous_value(ref, "heading")
+        prev_speed = get_previous_value(ref, "speed")
         db.reference("positions/tender3/latest").set({
             "timestamp": timestamp,
             "lat": tenders3[0]["Latitude"],
             "lon": tenders3[0]["Longitude"],
-            "heading": tenders3[0].get("COG"),
-            "speed": tenders3[0].get("SOG"),
+            "heading": tenders3[0].get("COG") if tenders3[0].get("COG") is not None else prev_heading,
+            "speed": tenders3[0].get("SOG") if tenders3[0].get("SOG") is not None else prev_speed,
         })
         print("✅ Tender 3 position updated")
 
     if tenders4:
+        ref = db.reference("positions/tender4/latest")
+        prev_heading = get_previous_value(ref, "heading")
+        prev_speed = get_previous_value(ref, "speed")
         db.reference("positions/tender4/latest").set({
             "timestamp": timestamp,
             "lat": tenders4[0]["Latitude"],
             "lon": tenders4[0]["Longitude"],
-            "heading": tenders4[0].get("COG"),
-            "speed": tenders4[0].get("SOG"),
+            "heading": tenders4[0].get("COG") if tenders4[0].get("COG") is not None else prev_heading,
+            "speed": tenders4[0].get("SOG") if tenders4[0].get("SOG") is not None else prev_speed,
         })
         print("✅ Tender 4 position updated")
 
@@ -89,3 +97,4 @@ async def run_loop():
 
 if __name__ == "__main__":
     asyncio.run(run_loop())
+

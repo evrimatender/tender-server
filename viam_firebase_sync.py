@@ -2,15 +2,18 @@ import asyncio
 import time
 from viam.robot.client import RobotClient
 from viam.components.sensor import Sensor
+import os
+import json
 import firebase_admin
 from firebase_admin import credentials, db
 
-# Firebase Admin SDK initialization
-cred = credentials.Certificate("serviceAccountKey.json")
 if not firebase_admin._apps:
+    firebase_key = json.loads(os.getenv("FIREBASE_KEY_JSON"))
+    cred = credentials.Certificate(firebase_key)
     firebase_admin.initialize_app(cred, {
         'databaseURL': 'https://evrima-tender-tracking-default-rtdb.firebaseio.com/'
     })
+
 
 async def connect():
     opts = RobotClient.Options.with_api_key(

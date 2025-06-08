@@ -56,6 +56,10 @@ async def main_loop(machine):
                 user_id = int(payload.get("User ID", -1))
                 if user_id == 215001000:
                     ships.append(payload)
+                elif user_id == 982150011:
+                    tenders1.append(payload) 
+                elif user_id == 982150012:
+                    tenders2.append(payload)    
                 elif user_id == 982150013:
                     tenders3.append(payload)
                 elif user_id == 982150014:
@@ -73,7 +77,26 @@ async def main_loop(machine):
                     "speed": ships[0].get("SOG") or get_previous_value(ref, "speed"),
                 })
                 logging.info("✅ Ship position updated")
-
+            if tenders1:
+                ref = db.reference("positions/tender3/latest")
+                ref.set({
+                    "timestamp": timestamp,
+                    "lat": tenders1[0]["Latitude"],
+                    "lon": tenders1[0]["Longitude"],
+                    "heading": tenders1[0].get("COG") or get_previous_value(ref, "heading"),
+                    "speed": tenders1[0].get("SOG") or get_previous_value(ref, "speed"),
+                })
+                logging.info("✅ Tender 1 position updated")
+            if tenders2:
+                ref = db.reference("positions/tender3/latest")
+                ref.set({
+                    "timestamp": timestamp,
+                    "lat": tenders2[0]["Latitude"],
+                    "lon": tenders2[0]["Longitude"],
+                    "heading": tenders2[0].get("COG") or get_previous_value(ref, "heading"),
+                    "speed": tenders2[0].get("SOG") or get_previous_value(ref, "speed"),
+                })
+                logging.info("✅ Tender 2 position updated")
             if tenders3:
                 ref = db.reference("positions/tender3/latest")
                 ref.set({

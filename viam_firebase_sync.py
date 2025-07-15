@@ -48,7 +48,8 @@ async def main_loop(machine):
     while True:
         try:
             all_pgn_return_value = await all_pgn.get_readings()
-            ships, tenders3, tenders4 = [], [], []
+            # Make sure all tender lists are defined
+            ships, tenders1, tenders2, tenders3, tenders4 = [], [], [], [], []
 
             for key, payload in all_pgn_return_value.items():
                 if not isinstance(payload, dict):
@@ -78,7 +79,7 @@ async def main_loop(machine):
                 })
                 logging.info("✅ Ship position updated")
             if tenders1:
-                ref = db.reference("positions/tender3/latest")
+                ref = db.reference("positions/tender1/latest")
                 ref.set({
                     "timestamp": timestamp,
                     "lat": tenders1[0]["Latitude"],
@@ -88,7 +89,7 @@ async def main_loop(machine):
                 })
                 logging.info("✅ Tender 1 position updated")
             if tenders2:
-                ref = db.reference("positions/tender3/latest")
+                ref = db.reference("positions/tender2/latest")
                 ref.set({
                     "timestamp": timestamp,
                     "lat": tenders2[0]["Latitude"],
@@ -107,7 +108,6 @@ async def main_loop(machine):
                     "speed": tenders3[0].get("SOG") or get_previous_value(ref, "speed"),
                 })
                 logging.info("✅ Tender 3 position updated")
-
             if tenders4:
                 ref = db.reference("positions/tender4/latest")
                 ref.set({

@@ -129,7 +129,7 @@ async def main_loop(machine):
             logging.error(f"⚠️ Unexpected error in main loop: {e}")
             await asyncio.sleep(5)  # Allow retry without crashing
 
-# Restart mechanism
+
 async def run_loop():
     while True:
         machine = await connect()
@@ -145,6 +145,6 @@ async def run_loop():
                 pass
             await asyncio.sleep(5)
 
-# Entrypoint
+
 if __name__ == "__main__":
     asyncio.run(run_loop())

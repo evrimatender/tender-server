@@ -10,7 +10,7 @@ from firebase_admin import credentials, db
 from grpclib.exceptions import StreamTerminatedError
 from asyncio import CancelledError, TimeoutError
 
-# Logging setup
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 # Firebase setup
